@@ -3,7 +3,12 @@ package com.niit.Backend.daoimpl;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.niit.Backend.dao.CategoryDAO;
 import com.niit.Backend.dto.Category;
@@ -13,6 +18,8 @@ import com.niit.Backend.dto.Category;
 @Repository("categoryDAO")
 public class CategoryDAOImpl implements CategoryDAO {
 	
+	@Autowired
+	private SessionFactory sessionFractory;
 	
 	private static List<Category> categories = new ArrayList<>();
 	
@@ -80,6 +87,28 @@ category = new Category();
 		}
 		
 		return null;
+	}
+
+
+
+	@Override
+	@Transactional
+	public boolean add(Category category) {
+		
+		try {
+			//add category to the database table
+			
+			sessionFractory.getCurrentSession().persist(category);
+			
+			return true;
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		
+	
 	}
 
 }
